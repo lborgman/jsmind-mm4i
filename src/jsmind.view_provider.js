@@ -173,7 +173,19 @@ export class ViewProvider {
             node._data.view = view_data;
         }
 
-        var d = $.c('jmnode');
+
+        // For mm4i jmnode editing etc
+        // var d = $.c('jmnode');
+        const d = $.c('jmnode');
+        const dBg = $.c('div');
+        dBg.classList.add("jmnode-bg");
+        d.appendChild(dBg);
+        const dTxt = $.c("div");
+        dTxt.classList.add("jmnode-text");
+        dTxt.classList.add("multiline-ellipsis");
+        d.appendChild(dTxt);
+
+
         if (node.isroot) {
             d.className = 'root';
         } else {
@@ -186,9 +198,9 @@ export class ViewProvider {
         }
         if (!!node.topic) {
             if (this.opts.support_html) {
-                $.h(d, node.topic);
+                $.h(dTxt, node.topic);
             } else {
-                $.t(d, node.topic);
+                $.t(dTxt, node.topic);
             }
         }
         d.setAttribute('nodeid', node.id);

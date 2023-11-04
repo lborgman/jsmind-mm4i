@@ -16,6 +16,7 @@
     "scripts": {
         "server": "http-server",
         "build": "rollup -c .config/rollup.config.js",
+        "build:dbg": "rollup -c .config/rollup.config-dbg.js",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest",
         "test-legacy": "jest tests/legacy",
         "test-es6": "NODE_OPTIONS=--experimental-vm-modules jest tests/unit",
@@ -45,6 +46,7 @@
         }
     ],
     "devDependencies": {
+        "@rollup/plugin-terser": "^0.4.4",
         "http-server": "^14.1.1",
         "jest": "^28.1.0",
         "jest-environment-jsdom": "^28.1.0",

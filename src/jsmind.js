@@ -29,6 +29,8 @@ export default class jsMind {
     static register_plugin = _register_plugin;
     static util = _util;
 
+    static mm4iSupported = true;
+
     constructor(options) {
         jsMind.current = this;
         this.options = merge_option(options);
