@@ -177,6 +177,7 @@ export class ViewProvider {
         // For mm4i jmnode editing etc
         // var d = $.c('jmnode');
         const d = $.c('jmnode');
+        d.draggable = true;
         const dBg = $.c('div');
         dBg.classList.add("jmnode-bg");
         d.appendChild(dBg);
@@ -236,10 +237,15 @@ export class ViewProvider {
         var view_data = node._data.view;
         var element = view_data.element;
         if (!!node.topic) {
+            const dTxt = element.lastElementChild;
+            console.log({ dTxt });
+            if (!dTxt.classList.contains("jmnode-text")) throw Error("Not div.jmnode-text");
             if (this.opts.support_html) {
-                $.h(element, node.topic);
+                // $.h(element, node.topic);
+                $.h(dTxt, node.topic);
             } else {
-                $.t(element, node.topic);
+                // $.t(element, node.topic);
+                $.t(dTxt, node.topic);
             }
         }
         if (this.layout.is_visible(node)) {
