@@ -261,7 +261,8 @@ export class ViewProvider {
                 debugger;
         }
         if (!!node.topic) {
-            const dTxt = element.lastElementChild;
+            // const dTxt = element.lastElementChild;
+            const dTxt = element.querySelector(".jmnode-text");
             console.log({ dTxt });
             if (!dTxt.classList.contains("jmnode-text")) throw Error("Not div.jmnode-text");
             if (this.opts.support_html) {
