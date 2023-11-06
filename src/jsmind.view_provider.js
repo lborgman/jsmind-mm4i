@@ -5,7 +5,7 @@
  * Project Home:
  *   https://github.com/hizzgdev/jsmind/
  */
-import { logger, EventType } from './jsmind.common.js';
+import { logger, EventType, Direction } from './jsmind.common.js';
 import { $ } from './jsmind.dom.js';
 import { init_graph } from './jsmind.graph.js';
 import { util } from './jsmind.util.js';
@@ -177,7 +177,6 @@ export class ViewProvider {
         // For mm4i jmnode editing etc
         // var d = $.c('jmnode');
         const d = $.c('jmnode');
-        d.draggable = true;
         const dBg = $.c('div');
         dBg.classList.add("jmnode-bg");
         d.appendChild(dBg);
@@ -196,6 +195,19 @@ export class ViewProvider {
             d_e.style.visibility = 'hidden';
             parent_node.appendChild(d_e);
             view_data.expander = d_e;
+            // For mm4i:
+            d.draggable = true;
+            // node.direction
+            switch (node.direction) {
+                case Direction.left:
+                    d.classList.add("left-side");
+                    break;
+                case Direction.right:
+                    d.classList.add("right-side");
+                    break;
+                default:
+                    debugger;
+            }
         }
         if (!!node.topic) {
             if (this.opts.support_html) {
@@ -236,6 +248,18 @@ export class ViewProvider {
     update_node(node) {
         var view_data = node._data.view;
         var element = view_data.element;
+        element.classList.remove("right-side");
+        element.classList.remove("left-side");
+        switch (node.direction) {
+            case Direction.left:
+                element.classList.add("left-side");
+                break;
+            case Direction.right:
+                element.classList.add("right-side");
+                break;
+            default:
+                debugger;
+        }
         if (!!node.topic) {
             const dTxt = element.lastElementChild;
             console.log({ dTxt });
@@ -458,11 +482,27 @@ export class ViewProvider {
                 expander.style.display = '';
                 expander.style.visibility = 'visible';
                 $.t(expander, expander_text);
+                node_element.classList.add("has-children");
             }
             // hide expander while all children have been removed
             if (!node.isroot && node.children.length == 0) {
                 expander.style.display = 'none';
                 expander.style.visibility = 'hidden';
+                node_element.classList.remove("has-children");
+            }
+            if (!node.isroot) {
+                node_element.classList.remove("left-side");
+                node_element.classList.remove("right-side");
+                switch (node.direction) {
+                    case Direction.left:
+                        node_element.classList.add("left-side");
+                        break;
+                    case Direction.right:
+                        node_element.classList.add("right-side");
+                        break;
+                    default:
+                        debugger;
+                }
             }
         }
     }
