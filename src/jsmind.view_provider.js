@@ -484,6 +484,11 @@ export class ViewProvider {
                 expander.style.visibility = 'visible';
                 $.t(expander, expander_text);
                 node_element.classList.add("has-children");
+                if (node.expanded) {
+                    node_element.classList.add("is-expanded");
+                } else {
+                    node_element.classList.remove("is-expanded");
+                }
             }
             // hide expander while all children have been removed
             if (!node.isroot && node.children.length == 0) {

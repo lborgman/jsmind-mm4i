@@ -315,6 +315,7 @@ export class LayoutProvider {
     }
     expand_node(node) {
         node.expanded = true;
+        node._data.view.element.classList.add("is-expanded");
         this.part_layout(node);
         this.set_visible(node.children, true);
         this.jm.invoke_event_handle(EventType.show, {
@@ -325,6 +326,8 @@ export class LayoutProvider {
     }
     collapse_node(node) {
         node.expanded = false;
+        node._data.view.element.classList.remove("is-expanded");
+        this.part_layout(node);
         this.part_layout(node);
         this.set_visible(node.children, false);
         this.jm.invoke_event_handle(EventType.show, {
