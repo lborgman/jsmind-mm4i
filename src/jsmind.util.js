@@ -150,4 +150,80 @@ export const util = {
             return s.replace(/\s*/, '').length == 0;
         },
     },
+
+    timing: {
+
+        // Quick fix for waiting for screen render!
+        // javascript - Performance of MutationObserver to detect nodes in entire DOM - Stack Overflow
+        // https://stackoverflow.com/questions/31659567/performance-of-mutationobserver-to-detect-nodes-in-entire-dom/39332340
+        // FIX-ME: Is not this just a version of debounce?
+        wait4mutations: (elt, ms, observeWhat, msMaxWait) => {
+            observeWhat = observeWhat || { attributes: true, characterData: true, childList: true, subtree: true, };
+            return new Promise(resolve => {
+                let tmr;
+                let mu;
+                let nMu = 0;
+                const now = Date.now();
+                function fin(val) { resolve(val); mu?.disconnect(); }
+                function restartTimer() {
+                    clearTimeout(tmr);
+                    nMu++;
+                    const newNow = Date.now();
+                    console.log({ nMu }, mu == undefined, newNow - now);
+                    if (msMaxWait && (newNow - now > msMaxWait)) {
+                        fin("max wait");
+                        return;
+                    }
+                    if (mu) {
+                        mu.disconnect();
+                        mu = undefined;
+                    } else {
+                        mu = new MutationObserver(mutations => {
+                            console.log("mutations!");
+                            restartTimer();
+                        });
+                    }
+                    setTimeout(fin, ms);
+                    mu?.observe(elt, observeWhat);
+                }
+                // const mu = new MutationObserver(mutations => { restartTimer(); });
+                restartTimer();
+                // mu.observe(elt, observeWhat);
+                // { attributes: true, characterData: true, childList: true, subtree: true, }
+            });
+        },
+
+
+    },
+
+    // From https://garden.bradwoods.io/notes/javascript/performance/debounce-throttle
+    debounce: function (callback, waitMS = 200) {
+        let timeoutId;
+
+        return function (...args) {
+            const context = this
+            clearTimeout(timeoutId);
+
+            timeoutId = setTimeout(function () {
+                timeoutId = null
+                callback.call(context, ...args)
+            }, waitMS);
+        };
+    },
+
+    throttle: function (func, waitMS = 200) {
+        let isWait = false;
+
+        return function (...args) {
+            if (!isWait) {
+                func.call(this, ...args);
+                isWait = true;
+
+                setTimeout(() => {
+                    isWait = false;
+                }, waitMS);
+            }
+        }
+    }
+
 };
