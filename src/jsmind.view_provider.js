@@ -145,9 +145,23 @@ export class ViewProvider {
         this.size.h = client_h;
     }
     init_nodes_size(node) {
-        var view_data = node._data.view;
+        const view_data = node._data.view;
         view_data.width = view_data.element.clientWidth;
         view_data.height = view_data.element.clientHeight;
+        // FIX-ME: test
+        if (node.isroot) {
+            const elt = view_data.element;
+            const cw1 = elt.clientWidth;
+            console.log({ cw1, elt });
+            setTimeout(() => {
+                const cw2 = elt.clientWidth;
+                console.log({ cw1, cw2, elt }, elt.firstElementChild.nextSibling.textContent);
+            }, 2000);
+        }
+    }
+    init_nodes() {
+        var nodes = this.jm.mind.nodes;
+        var doc_frag = $.d.createDocumentFragment();
     }
     init_nodes() {
         var nodes = this.jm.mind.nodes;
@@ -182,7 +196,8 @@ export class ViewProvider {
         d.appendChild(dBg);
         const dTxt = $.c("div");
         dTxt.classList.add("jmnode-text");
-        dTxt.classList.add("multiline-ellipsis");
+        // FIX-ME:
+        // dTxt.classList.add("multiline-ellipsis");
         d.appendChild(dTxt);
 
 
@@ -273,6 +288,7 @@ export class ViewProvider {
                 $.t(dTxt, node.topic);
             }
         }
+        console.log("view_provider update_node");
         if (this.layout.is_visible(node)) {
             view_data.width = element.clientWidth;
             view_data.height = element.clientHeight;
