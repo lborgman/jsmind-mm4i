@@ -273,7 +273,9 @@ export class ViewProvider {
                 element.classList.add("right-side");
                 break;
             default:
-                debugger;
+                if (!node.isroot) {
+                    debugger;
+                }
         }
         if (!!node.topic) {
             // const dTxt = element.lastElementChild;
