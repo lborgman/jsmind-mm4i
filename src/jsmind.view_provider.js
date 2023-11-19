@@ -145,9 +145,62 @@ export class ViewProvider {
         this.size.h = client_h;
     }
     init_nodes_size(node) {
+        function logColored(what, ...args) {
+            const ls = "background:greenyellow; color:black;";
+            console.log(`%c ${what}`, ls, ...args);
+        }
+        function logColored2(what, ...args) {
+            const ls = "background:orange; color:black;";
+            console.log(`%c ${what}`, ls, ...args);
+        }
         const view_data = node._data.view;
-        view_data.width = view_data.element.clientWidth;
-        view_data.height = view_data.element.clientHeight;
+        // Use node.data if set
+        if (node.data.width) {
+            if (node.data.height) {
+                view_data.width = node.data.width;
+                view_data.height = node.data.height;
+                console.log("view_data WAS SET", node.topic, view_data.width, view_data.height);
+                logColored("view_data WAS SET", node.topic, view_data.width, view_data.height);
+                return;
+            }
+            console.error("node.data.width, but not .height");
+            debugger;
+        }
+        // view_data.width = view_data.element.clientWidth;
+        // view_data.height = view_data.element.clientHeight;
+        setViewDataSizesFromJmnode(view_data);
+        function setViewDataSizesFromJmnode(node_view_data) {
+            const wh = util.screen.getJmnodeDefaultSize(view_data.element);
+            // node_view_data.width = node_view_data.element.clientWidth;
+            // node_view_data.height = node_view_data.element.clientHeight;
+            node_view_data.width = wh.w;
+            node_view_data.height = wh.h;
+
+            /*
+            // const eltTxt = node_view_data.element.firstElementChild.nextElementSibling;
+            // const padding = 10; // FIX-ME:
+            // const borderW = 2; // FIX-ME:
+
+            /*
+            ***** Just dropping this. It does not work!
+            // FIX-ME: Something is very wroing here. width and height are confused???
+            // node_view_data.width = eltTxt.clientWidth + 2 * padding + borderW;
+            // node_view_data.height = eltTxt.clientHeight + 2 * padding + borderW;
+            node_view_data.width = eltTxt.clientHeight + 2 * padding + borderW;
+            node_view_data.height = eltTxt.clientWidth + 2 * padding + borderW;
+
+            logColored2("eltTxt, w, h, direct", node.topic, eltTxt.clientWidth, eltTxt.clientHeight);
+            // console.log("view_data SCREEN", node.topic, view_data.width, view_data.height);
+            logColored("view_data SCREEN", node.topic, view_data.width, view_data.height);
+            // console.log("view_data SCREEN", node.topic, node_view_data.width, node_view_data.height);
+            setTimeout(() => {
+                logColored2("eltTxt, w, h, 10ms", node.topic, eltTxt.clientWidth, eltTxt.clientHeight);
+            }, 10);
+            setTimeout(() => {
+                logColored2("eltTxt, w, h, 500ms", node.topic, eltTxt.clientWidth, eltTxt.clientHeight);
+            }, 500);
+            */
+        }
         // FIX-ME: test
         if (node.isroot) {
             const elt = view_data.element;
