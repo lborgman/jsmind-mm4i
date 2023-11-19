@@ -224,7 +224,7 @@ export const util = {
 
     screen: {
         getTextMetrics: (txt, style) => getTextMetrics(txt, style),
-        getJmnodeDefaultSize: (eltJmnode) => getJmnodeDefaultSize(eltJmnode);
+        getJmnodeDefaultSize: (eltJmnode) => getJmnodeDefaultSize(eltJmnode),
     }
 };
 
