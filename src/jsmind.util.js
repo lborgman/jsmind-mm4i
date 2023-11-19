@@ -281,7 +281,9 @@ function getJmnodeDefaultSize(eltJmnode) {
     const jmPadB = getPx(ourJmnodeStyle.paddingBottom);
     const jmPadL = getPx(ourJmnodeStyle.paddingLeft);
     const jmPadR = getPx(ourJmnodeStyle.paddingRight);
-    const jmnodeWh = { w: tm.width + jmPadL + jmPadR, h: hText + jmPadT + jmPadB };
+    const maxW = parseFloat(ourJmnodeStyle.maxWidth);
+    const jw = Math.min(tm.width + jmPadL + jmPadR, maxW);
+    const jmnodeWh = { w: jw, h: hText + jmPadT + jmPadB };
     logColored2("jmnode Wh", jmnodeWh);
     return jmnodeWh;
 }
