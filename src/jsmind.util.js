@@ -242,7 +242,10 @@ function getJmnodeDefaultSize(eltJmnode) {
     if (!eltJmnode.isConnected) throw Error("<jmnode> not in document");
     const tn = eltJmnode.nodeName;
     if (tn != "JMNODE") throw Error(`Expected JMNODE, got <${tn}>`);
-    const eltOverflow = eltJmnode.firstElementChild.nextElementSibling;
+    const eltOverflowCont = eltJmnode.firstElementChild.nextElementSibling;
+    if (!eltOverflowCont.classList.contains("jmnode-overflow-cont")) throw Error("Not .jmnode-overflow");
+    // const eltOverflow = eltJmnode.firstElementChild.nextElementSibling;
+    const eltOverflow = eltOverflowCont.firstElementChild;
     if (!eltOverflow.classList.contains("jmnode-overflow")) throw Error("Not .jmnode-overflow");
     const eltTxt = eltOverflow.firstElementChild;
     if (!eltTxt.classList.contains("jmnode-text")) throw Error("Not .jmnode-text");

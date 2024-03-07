@@ -249,15 +249,18 @@ export class ViewProvider {
         const dBg = $.c('div');
         dBg.classList.add("jmnode-bg");
         d.appendChild(dBg);
-        const dOverF = $.c('div');
-        dOverF.classList.add("jmnode-overflow");
-        d.appendChild(dOverF);
+        const dOverflow = $.c('div');
+        dOverflow.classList.add("jmnode-overflow");
+        const dOverflowCont = $.c('div');
+        dOverflowCont.classList.add("jmnode-overflow-cont");
+        dOverflowCont.appendChild(dOverflow);
+        d.appendChild(dOverflowCont);
         const dTxt = $.c("div");
         dTxt.classList.add("jmnode-text");
         // FIX-ME:
         // dTxt.classList.add("multiline-ellipsis");
 
-        dOverF.appendChild(dTxt);
+        dOverflow.appendChild(dTxt);
         if (node.isroot) {
             d.className = 'root';
         } else {

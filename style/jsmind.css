@@ -47,7 +47,7 @@ jmnodes {
 jmnode {
     position: absolute;
     cursor: default;
-    NOmax-width: 400px;
+    nomax-width: 400px;
 }
 jmexpander {
     position: absolute;
@@ -68,11 +68,16 @@ jmexpander {
     min-width: 420px;
 }
 
-.jmnode-overflow-hidden jmnode {
+.NOjmnode-overflow-hidden jmnode {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+div.jmnode-overflow-cont {
+    overflow: hidden;
+}
+
 /* default theme */
 jmnode {
     padding: 10px;
