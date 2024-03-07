@@ -157,7 +157,9 @@ export class ViewProvider {
         // Use node.data if set
         if (node.data.width) {
             if (node.data.height) {
-                view_data.width = node.data.width;
+                const wh = util.screen.getJmnodeDefaultSize(view_data.element);
+                // view_data.width = node.data.width;
+                view_data.width = Math.min(node.data.width, wh.w);
                 view_data.height = node.data.height;
                 console.log("view_data WAS SET", node.topic, view_data.width, view_data.height);
                 logColored("view_data WAS SET", node.topic, view_data.width, view_data.height);
@@ -247,13 +249,15 @@ export class ViewProvider {
         const dBg = $.c('div');
         dBg.classList.add("jmnode-bg");
         d.appendChild(dBg);
+        const dOverF = $.c('div');
+        dOverF.classList.add("jmnode-overflow");
+        d.appendChild(dOverF);
         const dTxt = $.c("div");
         dTxt.classList.add("jmnode-text");
         // FIX-ME:
         // dTxt.classList.add("multiline-ellipsis");
-        d.appendChild(dTxt);
 
-
+        dOverF.appendChild(dTxt);
         if (node.isroot) {
             d.className = 'root';
         } else {

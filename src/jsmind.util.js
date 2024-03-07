@@ -234,27 +234,29 @@ export const util = {
 // FIX-ME: tempTextWh.js
 ///////////////////////////////////////
 
-function clearComputedStyles(eltJmnodes) {
-    delete eltJmnodes["jmnodeRootTextStyle"];
-    delete eltJmnodes["jmnodeTextStyle"];
+function clearComputedStyles(eltJmnodes4styles) {
+    delete eltJmnodes4styles["jmnodeRootTextStyle"];
+    delete eltJmnodes4styles["jmnodeTextStyle"];
 }
 function getJmnodeDefaultSize(eltJmnode) {
     if (!eltJmnode.isConnected) throw Error("<jmnode> not in document");
     const tn = eltJmnode.nodeName;
     if (tn != "JMNODE") throw Error(`Expected JMNODE, got <${tn}>`);
-    const eltTxt = eltJmnode.firstElementChild.nextElementSibling;
+    const eltOverflow = eltJmnode.firstElementChild.nextElementSibling;
+    if (!eltOverflow.classList.contains("jmnode-overflow")) throw Error("Not .jmnode-overflow");
+    const eltTxt = eltOverflow.firstElementChild;
     if (!eltTxt.classList.contains("jmnode-text")) throw Error("Not .jmnode-text");
 
     const isRoot = eltJmnode.classList.contains("root");
-    const eltJmnodes = eltJmnode.closest("jmnodes");
+    const eltJmnodes4styles = eltJmnode.closest("jmnodes");
 
     const styleNameText = isRoot ? "jmnodeRootTextStyle" : "jmnodeTextStyle";
-    eltJmnodes[styleNameText] = eltJmnodes[styleNameText] || getComputedStyle(eltTxt);
-    const ourTextStyle = eltJmnodes[styleNameText];
+    eltJmnodes4styles[styleNameText] = eltJmnodes4styles[styleNameText] || getComputedStyle(eltTxt);
+    const ourTextStyle = eltJmnodes4styles[styleNameText];
 
     const styleNameJmnode = isRoot ? "jmnodeRootJmnodeStyle" : "jmnodeJmnodeStyle";
-    eltJmnodes[styleNameJmnode] = eltJmnodes[styleNameJmnode] || getComputedStyle(eltJmnode);
-    const ourJmnodeStyle = eltJmnodes[styleNameJmnode];
+    eltJmnodes4styles[styleNameJmnode] = eltJmnodes4styles[styleNameJmnode] || getComputedStyle(eltJmnode);
+    const ourJmnodeStyle = eltJmnodes4styles[styleNameJmnode];
 
     const ourLineHeight = ourTextStyle.lineHeight;
     const ourText = eltTxt.textContent;

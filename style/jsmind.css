@@ -47,7 +47,7 @@ jmnodes {
 jmnode {
     position: absolute;
     cursor: default;
-    max-width: 400px;
+    NOmax-width: 400px;
 }
 jmexpander {
     position: absolute;
@@ -407,12 +407,14 @@ jmnodes.theme-asbestos jmexpander {
 jmnodes.theme-asbestos jmexpander:hover {
 }
 
-
-
-
 /* From rem10m1h.css */
 jmnodes jmnode {
     padding: 10px;
+    max-width: 150px;
+    max-height: 94px;
+    /* Try to handle overlfow in .jmnode-text */
+    display: grid;
+    grid-template-rows: 1fr;
 }
 
 jmnodes jmnode .jmnode-bg {
@@ -422,14 +424,12 @@ jmnodes jmnode .jmnode-bg {
     bottom: 0;
     right: 0;
 
-    NOwidth: 100%;
-    NOheight: 100%;
     background-repeat: no-repeat;
     background-size: cover;
     background-color: green;
 }
 
-jmnodes jmnode .jmnode-bg:not([class*=jsmind-shape-]) {
+jmnodes jmnode .jmnode-bg:not([class*='jsmind-shape-']) {
     background-color: transparent;
 }
 
@@ -480,16 +480,12 @@ jmnodes jmnode .jmnode-text {
     text-shadow: 1px 0 black, -1px 0 black, 0 1px black, 0 -1px black, 0 0 2px black;
 }
 
-
-
-.jsmind_container jmnodes jmnode[nodeid=root] {
+.jsmind_container jmnodes jmnode[nodeid='root'] {
     overflow: hidden;
     overflow: visible;
 }
-
 
 /* https://css-tricks.com/almanac/properties/t/touch-action/ */
 jmnodes {
     touch-action: manipulation;
 }
-
