@@ -10,6 +10,19 @@ import { $ } from './jsmind.dom.js';
 import { init_graph } from './jsmind.graph.js';
 import { util } from './jsmind.util.js';
 
+function markTextOverflow(node) {
+    const view_data = node._data.view;
+    const element = view_data.element;
+    const dTxt = element.querySelector("div.jmnode-text");
+    const ch = dTxt.clientHeight;
+    const sh = dTxt.scrollHeight;
+    console.log({ ch, sh });
+    const isOverflow = sh > ch;
+    if (isOverflow) {
+        dTxt.style.backgroundColor = "red";
+    }
+}
+
 export class ViewProvider {
     constructor(jm, options) {
         this.opts = options;
@@ -226,12 +239,15 @@ export class ViewProvider {
         }
         this.e_nodes.appendChild(doc_frag);
         for (var nodeid in nodes) {
-            this.init_nodes_size(nodes[nodeid]);
+            const node = nodes[nodeid];
+            this.init_nodes_size(node);
+            setTimeout(() => { markTextOverflow(node) }, 1000);
         }
     }
     add_node(node) {
         this.create_node_element(node, this.e_nodes);
         this.init_nodes_size(node);
+        setTimeout(() => { markTextOverflow(node) }, 1000);
     }
     create_node_element(node, parent_node) {
         var view_data = null;
@@ -337,10 +353,9 @@ export class ViewProvider {
                     debugger;
                 }
         }
+        const dTxt = element.querySelector(".jmnode-text");
+        console.log({ dTxt });
         if (!!node.topic) {
-            // const dTxt = element.lastElementChild;
-            const dTxt = element.querySelector(".jmnode-text");
-            console.log({ dTxt });
             if (!dTxt.classList.contains("jmnode-text")) throw Error("Not div.jmnode-text");
             if (this.opts.support_html) {
                 // $.h(element, node.topic);
@@ -351,9 +366,11 @@ export class ViewProvider {
             }
         }
         console.log("view_provider update_node");
+        setTimeout(() => { markTextOverflow(node); }, 1000);
         if (this.layout.is_visible(node)) {
             view_data.width = element.clientWidth;
             view_data.height = element.clientHeight;
+            // setTimeout(() => { markTextOverflow(node); }, 1000);
         } else {
             let origin_style = element.getAttribute('style');
             element.style = 'visibility: visible; left:0; top:0;';
