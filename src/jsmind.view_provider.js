@@ -13,13 +13,17 @@ import { util } from './jsmind.util.js';
 function markTextOverflow(node) {
     const view_data = node._data.view;
     const element = view_data.element;
+    // FIX-ME: we know the path...
     const dTxt = element.querySelector("div.jmnode-text");
     const ch = dTxt.clientHeight;
     const sh = dTxt.scrollHeight;
     console.log({ ch, sh });
     const isOverflow = sh > ch;
     if (isOverflow) {
-        dTxt.style.backgroundColor = "red";
+        // dTxt.style.backgroundColor = "red";
+        element.classList.add("text-overflow");
+    } else {
+        element.classList.remove("text-overflow");
     }
 }
 
@@ -275,6 +279,11 @@ export class ViewProvider {
         dTxt.classList.add("jmnode-text");
         // FIX-ME:
         // dTxt.classList.add("multiline-ellipsis");
+        const dOverflowIndicator = $.c("div");
+        dOverflowIndicator.textContent = "···";
+        dOverflowIndicator.title = "Text overflow";
+        dOverflowIndicator.classList.add("jmnode-overflow-indicator");
+        d.appendChild(dOverflowIndicator);
 
         dOverflow.appendChild(dTxt);
         if (node.isroot) {
