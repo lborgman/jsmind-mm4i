@@ -15,7 +15,7 @@
     },
     "scripts": {
         "server": "http-server",
-        "build": "rollup -c .config/rollup.config.js",
+        "build": "rollup -c .config/rollup.config.mjs",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest",
         "test-legacy": "jest tests/legacy",
         "test-es6": "NODE_OPTIONS=--experimental-vm-modules jest tests/unit",
