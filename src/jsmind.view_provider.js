@@ -200,7 +200,9 @@ export class ViewProvider {
         this.e_panel.style.position = null;
         this.e_panel.style.top = null;
     }
-    create_node_element(node, parent_node) {
+
+
+    ORIGcreate_node_element(node, parent_node) {
         var view_data = null;
         if ('view' in node._data) {
             view_data = node._data.view;
@@ -230,6 +232,62 @@ export class ViewProvider {
         parent_node.appendChild(d);
         view_data.element = d;
     }
+    create_node_element(node, parent_node) {
+        console.warn("create_node_element", node, parent_node);
+        var view_data = null;
+        if ('view' in node._data) {
+            view_data = node._data.view;
+        } else {
+            view_data = {};
+            node._data.view = view_data;
+        }
+        const d = $.c('jmnode');
+        const dBg = $.c('div');
+        dBg.classList.add("jmnode-bg");
+        d.appendChild(dBg);
+        const dOverF = $.c('div');
+        dOverF.classList.add("jmnode-overflow");
+        d.appendChild(dOverF);
+        const dTxt = $.c("div");
+        dTxt.classList.add("jmnode-text");
+        dOverF.appendChild(dTxt);
+        if (node.isroot) {
+            d.className = 'root';
+        } else {
+            var d_e = $.c('jmexpander');
+            $.t(d_e, '-');
+            d_e.setAttribute('nodeid', node.id);
+            d_e.style.visibility = 'hidden';
+            parent_node.appendChild(d_e);
+            view_data.expander = d_e;
+            d.draggable = true;
+            switch (node.direction) {
+                case Direction.left:
+                    d.classList.add("left-side");
+                    break;
+                case Direction.right:
+                    d.classList.add("right-side");
+                    break;
+                default:
+                    debugger; // eslint-disable-line no-debugger
+            }
+        }
+        if (node.topic) {
+            if (this.opts.support_html) {
+                $.h(dTxt, node.topic);
+            } else {
+                $.t(dTxt, node.topic);
+            }
+        }
+        d.setAttribute('nodeid', node.id);
+        d.style.visibility = 'hidden';
+        this._reset_node_custom_style(d, node.data);
+        parent_node.appendChild(d);
+        view_data.element = d;
+    }
+
+
+
     remove_node(node) {
         if (this.selected_node != null && this.selected_node.id == node.id) {
             this.selected_node = null;
@@ -252,7 +310,9 @@ export class ViewProvider {
             node._data.view.expander = null;
         }
     }
-    update_node(node) {
+
+
+    ORIGupdate_node(node) {
         var view_data = node._data.view;
         var element = view_data.element;
         if (!!node.topic) {
@@ -269,6 +329,48 @@ export class ViewProvider {
             element.style = origin_style;
         }
     }
+    update_node(node) {
+        var view_data = node._data.view;
+        var element = view_data.element;
+        element.classList.remove("right-side");
+        element.classList.remove("left-side");
+        switch (node.direction) {
+            case Direction.left:
+                element.classList.add("left-side");
+                break;
+            case Direction.right:
+                element.classList.add("right-side");
+                break;
+            default:
+                if (!node.isroot) {
+                    debugger; // eslint-disable-line no-debugger
+                }
+        }
+        if (node.topic) {
+            const dTxt = element.querySelector(".jmnode-text");
+            console.log({ dTxt });
+            if (!dTxt.classList.contains("jmnode-text")) throw Error("Not div.jmnode-text");
+            if (this.opts.support_html) {
+                $.h(dTxt, node.topic);
+            } else {
+                $.t(dTxt, node.topic);
+            }
+        }
+        console.log("view_provider update_node");
+        if (this.layout.is_visible(node)) {
+            view_data.width = element.clientWidth;
+            view_data.height = element.clientHeight;
+        } else {
+            let origin_style = element.getAttribute('style');
+            element.style = 'visibility: visible; left:0; top:0;';
+            view_data.width = element.clientWidth;
+            view_data.height = element.clientHeight;
+            element.style = origin_style;
+        }
+    }
+
+
+
     select_node(node) {
         if (!!this.selected_node) {
             var element = this.selected_node._data.view.element;
