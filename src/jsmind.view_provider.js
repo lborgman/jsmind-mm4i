@@ -5,7 +5,7 @@
  * Project Home:
  *   https://github.com/hizzgdev/jsmind/
  */
-import { logger, EventType } from './jsmind.common.js';
+import { logger, EventType, Direction } from './jsmind.common.js';
 import { $ } from './jsmind.dom.js';
 import { init_graph } from './jsmind.graph.js';
 import { util } from './jsmind.util.js';
