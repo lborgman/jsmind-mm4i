@@ -5,6 +5,9 @@
  * Project Home:
  *   https://github.com/hizzgdev/jsmind/
  */
+
+// @ts-check
+
 import { logger, EventType, Direction } from './jsmind.common.js';
 import { $ } from './jsmind.dom.js';
 import { init_graph } from './jsmind.graph.js';
@@ -138,10 +141,10 @@ export class ViewProvider {
             this.reset_node_custom_style(nodes[nodeid]);
         }
     }
-    load() {
+    async load() {
         logger.debug('view.load');
         this.setup_canvas_draggable(this.opts.draggable);
-        this.init_nodes();
+        await this.init_nodes();
         this._initialized = true;
     }
     expand_size() {
@@ -159,12 +162,77 @@ export class ViewProvider {
         this.size.w = client_w;
         this.size.h = client_h;
     }
-    init_nodes_size(node) {
+
+
+    /*
+        When <jmnode> contains inner element the original 
+        simple way of getting height and width can't be used
+        because the <jmnode> will not be immediately ready.
+
+        We have to wait for it. An obvious way to do that is to 
+        use MutationObservber. However since we only care for 
+        width and height we may instead use RequestAnimationFrame.
+
+        I found this idea at https://github.com/sindresorhus/element-ready
+        My implementation is a bit simpler.
+
+    */
+    /**
+     * 
+     * @param {Object} node 
+     */
+    ORIGinit_nodes_size(node) {
         var view_data = node._data.view;
         view_data.width = view_data.element.clientWidth;
         view_data.height = view_data.element.clientHeight;
     }
-    init_nodes() {
+    /**
+     * 
+     * @param {Object} node 
+     * @returns {Promise}
+     */
+    init_nodes_size(node) {
+        const view_data = node._data.view;
+        const eltJmnode = view_data.element;
+        if (!eltJmnode) throw Error("eltJmnode is null");
+        let tempW;
+        let tempH;
+        let nEq;
+        const startTime = Date.now();
+        const msMaxWait = 1000;
+        return new Promise((resolve, reject) => {
+            const getWH = () => {
+                const W = eltJmnode.clientWidth;
+                const H = eltJmnode.clientHeight;
+                if (W) {
+                    if (W == tempW && H == tempH) {
+                        nEq++;
+                        if (nEq > 10) {
+                            view_data.width = W;
+                            view_data.height = H;
+                            console.log("init_nodes_size", tempW, tempH, view_data);
+                            resolve(true);
+                            return;
+                        }
+                    } else {
+                        tempW = W;
+                        tempH = H;
+                        nEq = 0;
+                    }
+                }
+                if ((Date.now() - startTime) > msMaxWait) {
+                    reject("init_node_size: Too long time");
+                    return;
+                }
+                requestAnimationFrame(getWH);
+            }
+            getWH();
+        });
+    }
+
+
+    /* See init_node_size */
+    ORIGinit_nodes() {
         var nodes = this.jm.mind.nodes;
         var doc_frag = $.d.createDocumentFragment();
         for (var nodeid in nodes) {
@@ -178,6 +246,27 @@ export class ViewProvider {
             }
         });
     }
+    init_nodes() {
+        const nodes = this.jm.mind.nodes;
+        const doc_frag = $.d.createDocumentFragment();
+        for (const nodeid in nodes) {
+            this.create_node_element(nodes[nodeid], doc_frag);
+        }
+        this.e_nodes.appendChild(doc_frag);
+
+        const arrProms = [];
+        this.run_in_c11y_mode_if_needed(() => {
+            for (const nodeid in nodes) {
+                const prom = this.init_nodes_size(nodes[nodeid]);
+                console.log({ prom });
+                arrProms.push(prom);
+            }
+        });
+        return Promise.all(arrProms);
+    }
+
+
+
     add_node(node) {
         this.create_node_element(node, this.e_nodes);
         this.run_in_c11y_mode_if_needed(() => {

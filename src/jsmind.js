@@ -19,6 +19,7 @@ import { format } from './jsmind.format.js';
 import { $ } from './jsmind.dom.js';
 import { util as _util } from './jsmind.util.js';
 
+console.log(`Here is jsmind-mm4i, module, ${__version__}`);
 export default class jsMind {
     static mind = Mind;
     static node = Node;
@@ -276,7 +277,7 @@ export default class jsMind {
         this.layout.reset();
         this.data.reset();
     }
-    _show(mind, skip_centering) {
+    async _show_async(mind, skip_centering) {
         var m = mind || format.node_array.example;
         this.mind = this.data.load(m);
         if (!this.mind) {
@@ -286,7 +287,7 @@ export default class jsMind {
             logger.debug('data.load ok');
         }
 
-        this.view.load();
+        await this.view.load();
         logger.debug('view.load ok');
 
         this.layout.layout();
@@ -297,9 +298,9 @@ export default class jsMind {
 
         this.invoke_event_handle(EventType.show, { data: [mind] });
     }
-    show(mind, skip_centering) {
+    async show_async(mind, skip_centering) {
         this._reset();
-        this._show(mind, skip_centering);
+        await this._show_async(mind, skip_centering);
     }
     get_meta() {
         return {
@@ -701,12 +702,12 @@ export default class jsMind {
         }
     }
 
-    static show(options, mind) {
+    static show_depreceated(options, mind) {
         logger.warn(
             '`jsMind.show(options, mind)` is deprecated, please use `jm = new jsMind(options); jm.show(mind);` instead'
         );
         var _jm = new jsMind(options);
-        _jm.show(mind);
+        _jm.show_async(mind);
         return _jm;
     }
 }
