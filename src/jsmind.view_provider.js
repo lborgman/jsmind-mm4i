@@ -194,20 +194,28 @@ export class ViewProvider {
     init_nodes_size(node) {
         const view_data = node._data.view;
         const eltJmnode = view_data.element;
+        const eltText = eltJmnode.querySelector(".jmnode-text");
         if (!eltJmnode) throw Error("eltJmnode is null");
         let tempW;
         let tempH;
+        let tempWtext;
+        let tempHtext;
         let nEq;
         const startTime = Date.now();
         const msMaxWait = 1000;
         return new Promise((resolve, reject) => {
             const getWH = () => {
                 const W = eltJmnode.clientWidth;
-                const H = eltJmnode.clientHeight;
                 if (W) {
-                    if (W == tempW && H == tempH) {
+                    const H = eltJmnode.clientHeight;
+                    const Wtext = eltText.clientWidth;
+                    const Htext = eltText.clientHeight;
+                    if (W == tempW && H == tempH
+                        &&
+                        Wtext == tempWtext && Htext == tempHtext
+                    ) {
                         nEq++;
-                        if (nEq > 10) {
+                        if (nEq > 100) {
                             view_data.width = W;
                             view_data.height = H;
                             console.log("init_nodes_size", tempW, tempH, view_data);
@@ -217,6 +225,8 @@ export class ViewProvider {
                     } else {
                         tempW = W;
                         tempH = H;
+                        tempWtext = Wtext;
+                        tempHtext = Htext;
                         nEq = 0;
                     }
                 }
@@ -349,7 +359,7 @@ export class ViewProvider {
             d_e.style.visibility = 'hidden';
             parent_node.appendChild(d_e);
             view_data.expander = d_e;
-            d.draggable = true;
+            // d.draggable = true;
             switch (node.direction) {
                 case Direction.left:
                     d.classList.add("left-side");

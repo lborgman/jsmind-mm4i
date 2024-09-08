@@ -93,7 +93,8 @@ jmnode.selected {
     box-shadow: 2px 2px 8px #000;
 }
 jmnode.root {
-    font-size: 24px;
+    font-size: 26px;
+    text-decoration: wavy underline;
 }
 jmexpander {
     border-color: gray;
