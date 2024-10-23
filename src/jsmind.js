@@ -25,7 +25,7 @@ import { format } from './jsmind.format.js';
 import { $ } from './jsmind.dom.js';
 import { util as _util } from './jsmind.util.js';
 
-console.log(`Here is jsmind-mm4i, module, ${__version__}`);
+console.log(`Here is jsmind-mm4i.js, ${__version__}`);
 export default class jsMind {
     static mind = Mind;
     static node = Node;

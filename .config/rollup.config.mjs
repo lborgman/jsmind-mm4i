@@ -23,6 +23,7 @@ export default [
         output: {
             name: 'jsMind',
             file: 'es6/jsmind-mm4i.js',
+            // format: 'es', // FIX-ME: does not work???
             format: 'umd',
             banner: banner,
             // sourcemap: true,

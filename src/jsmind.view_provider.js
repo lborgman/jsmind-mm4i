@@ -180,17 +180,6 @@ export class ViewProvider {
     /**
      * 
      * @param {Object} node 
-     */
-    /*
-    ORIGinit_nodes_size(node) {
-        var view_data = node._data.view;
-        view_data.width = view_data.element.clientWidth;
-        view_data.height = view_data.element.clientHeight;
-    }
-    */
-    /**
-     * 
-     * @param {Object} node 
      * @returns {Promise}
      */
     async init_nodes_size(node) {
@@ -201,7 +190,7 @@ export class ViewProvider {
         function checkBcr(bcrResolved, elt) {
             if (elt.tagName != "JMNODE") throw Error("Not jmnode");
             const txt2 = elt.textContent;
-            console.log("Start CHECK", txt2);
+            // console.log("Start CHECK", txt2);
             function checkAfter(ms) {
                 setTimeout(() => {
                     const bcrjAtCheck = elt.getBoundingClientRect();
@@ -212,7 +201,7 @@ export class ViewProvider {
             }
             let ms = 10;
             while (ms < 20) {
-                console.log(`Start CHECK ${ms}ms, ${txt2}`);
+                // console.log(`Start CHECK ${ms}ms, ${txt2}`);
                 checkAfter(ms);
                 ms *= 4;
             }
@@ -225,9 +214,9 @@ export class ViewProvider {
         view_data.width = resolvedBcr.width;
         view_data.height = resolvedBcr.height;
         if (node.topic) {
-            const bcrAfter = eltJmnode.getBoundingClientRect();
-            console.log(node.topic, { bcrAfter });
-            checkBcr(resolvedBcr, eltJmnode);
+            // const bcrAfter = eltJmnode.getBoundingClientRect();
+            // console.log(node.topic, { bcrAfter });
+            // checkBcr(resolvedBcr, eltJmnode);
         }
         return;
 
@@ -247,7 +236,7 @@ export class ViewProvider {
                         const txt = eltCopilotCallback.textContent;
                         const w = bcr.width;
                         const h = bcr.height;
-                        console.log(`RESOLVE Copilot, ${delay}, ${txt}`, { w, h });
+                        // console.log(`RESOLVE Copilot, ${delay}, ${txt}`, { w, h });
                         resolve(bcr);
                     }, delay);
                 }
@@ -444,7 +433,7 @@ export class ViewProvider {
     }
     */
     init_nodes() {
-        console.log(">>>>>> init_nodes");
+        // console.log(">>>>>> init_nodes");
         const nodes = this.jm.mind.nodes;
         const doc_frag = $.d.createDocumentFragment();
         for (const nodeid in nodes) {
@@ -456,7 +445,7 @@ export class ViewProvider {
         this.run_in_c11y_mode_if_needed(() => {
             for (const nodeid in nodes) {
                 const prom = this.init_nodes_size(nodes[nodeid]);
-                console.log({ prom });
+                // console.log({ prom });
                 arrProms.push(prom);
             }
         });
@@ -524,7 +513,7 @@ export class ViewProvider {
         view_data.element = d;
     }
     create_node_element(node, parent_node) {
-        console.warn("create_node_element", node, parent_node);
+        // console.warn("create_node_element", node, parent_node);
         var view_data = null;
         if ('view' in node._data) {
             view_data = node._data.view;

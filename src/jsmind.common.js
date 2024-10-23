@@ -7,7 +7,7 @@
  *
  */
 
-export const __version__ = '0.8.502';
+export const __version__ = '0.8.505';
 export const __author__ = 'hizzgdev@163.com';
 
 if (typeof String.prototype.startsWith != 'function') {
