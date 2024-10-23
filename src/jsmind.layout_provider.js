@@ -394,7 +394,7 @@ export class LayoutProvider {
     }
     part_layout(node) {
         var root = this.jm.mind.root;
-        if (!!root) {
+        if (root) {
             var root_layout_data = root._data.layout;
             if (node.isroot) {
                 root_layout_data.outer_height_right = this._layout_offset_subnodes_height(
@@ -426,7 +426,7 @@ export class LayoutProvider {
     set_visible(nodes, visible) {
         var i = nodes.length;
         var node = null;
-        var layout_data = null;
+        // var layout_data = null;
         while (i--) {
             node = nodes[i];
             layout_data = node._data.layout;

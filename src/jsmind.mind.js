@@ -151,7 +151,7 @@ export class Mind {
                 node.index = 0;
                 this._update_index(node.parent);
             } else {
-                var node_before = !!before_id ? this.get_node(before_id) : null;
+                var node_before = before_id ? this.get_node(before_id) : null;
                 if (
                     node_before != null &&
                     node_before.parent != null &&

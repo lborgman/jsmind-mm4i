@@ -1,6 +1,22 @@
 // import cleanup from 'rollup-plugin-cleanup';
 // import { terser } from 'rollup-plugin-terser';
 
+const banner = `
+/**
+* @license BSD-3-Clause
+* @copyright 2014-2023 hizzgdev@163.com
+*
+* Project Home:
+*   https://github.com/hizzgdev/jsmind/
+*
+*
+****************
+* This is a fork!
+* Fork Project Home:
+*   https://github.com/lborgman/jsmind-mm4i
+*/
+`;
+
 export default [
     {
         input: 'src/jsmind.js',
@@ -8,7 +24,7 @@ export default [
             name: 'jsMind',
             file: 'es6/jsmind-mm4i.js',
             format: 'umd',
-            banner: '/**\n* @license BSD-3-Clause\n* @copyright 2014-2023 hizzgdev@163.com\n*\n* Project Home:\n*   https://github.com/hizzgdev/jsmind/\n*/',
+            banner: banner,
             // sourcemap: true,
         },
         /*
@@ -29,20 +45,7 @@ export default [
         output: {
             file: 'es6/jsmind.draggable-node-TEMP.js',
             format: 'es',
-            banner: `/**
-* @license BSD-3-Clause
-* @copyright 2014-2023 hizzgdev@163.com
-*
-* Project Home:
-*   https://github.com/hizzgdev/jsmind/
-*
-*
-****************
-* This is a fork!
-* Fork Project Home:
-*   https://github.com/lborgman/jsmind-mm4i
-*/
-`,
+            banner: banner,
             sourcemap: true,
             globals: {
                 jsmind: 'jsMind',
@@ -67,7 +70,7 @@ export default [
         output: {
             file: 'es6/jsmind.screenshot.js',
             format: 'umd',
-            banner: '/**\n* @license BSD-3-Clause\n* @copyright 2014-2023 hizzgdev@163.com\n*\n* Project Home:\n*   https://github.com/hizzgdev/jsmind/\n*/',
+            banner: banner,
             sourcemap: true,
             globals: {
                 'jsmind': 'jsMind',

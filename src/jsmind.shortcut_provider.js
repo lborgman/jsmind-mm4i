@@ -77,35 +77,35 @@ export class ShortcutProvider {
             this._mapping[kc].call(this, this.jm, e);
         }
     }
-    handle_addchild(_jm, e) {
+    handle_addchild(_jm) {
         var selected_node = _jm.get_selected_node();
-        if (!!selected_node) {
+        if (selected_node) {
             var node_id = this._newid();
             var node = _jm.add_node(selected_node, node_id, 'New Node');
-            if (!!node) {
+            if (node) {
                 _jm.select_node(node_id);
                 _jm.begin_edit(node_id);
             }
         }
     }
-    handle_addbrother(_jm, e) {
+    handle_addbrother(_jm) {
         var selected_node = _jm.get_selected_node();
         if (!!selected_node && !selected_node.isroot) {
             var node_id = this._newid();
             var node = _jm.insert_node_after(selected_node, node_id, 'New Node');
-            if (!!node) {
+            if (node) {
                 _jm.select_node(node_id);
                 _jm.begin_edit(node_id);
             }
         }
     }
-    handle_editnode(_jm, e) {
+    handle_editnode(_jm) {
         var selected_node = _jm.get_selected_node();
-        if (!!selected_node) {
+        if (selected_node) {
             _jm.begin_edit(selected_node);
         }
     }
-    handle_delnode(_jm, e) {
+    handle_delnode(_jm) {
         var selected_node = _jm.get_selected_node();
         if (!!selected_node && !selected_node.isroot) {
             _jm.select_node(selected_node.parent);
@@ -115,7 +115,7 @@ export class ShortcutProvider {
     handle_toggle(_jm, e) {
         var evt = e || event;
         var selected_node = _jm.get_selected_node();
-        if (!!selected_node) {
+        if (selected_node) {
             _jm.toggle_node(selected_node.id);
             evt.stopPropagation();
             evt.preventDefault();
@@ -124,7 +124,7 @@ export class ShortcutProvider {
     handle_up(_jm, e) {
         var evt = e || event;
         var selected_node = _jm.get_selected_node();
-        if (!!selected_node) {
+        if (selected_node) {
             var up_node = _jm.find_node_before(selected_node);
             if (!up_node) {
                 var np = _jm.find_node_before(selected_node.parent);
@@ -132,7 +132,7 @@ export class ShortcutProvider {
                     up_node = np.children[np.children.length - 1];
                 }
             }
-            if (!!up_node) {
+            if (up_node) {
                 _jm.select_node(up_node);
             }
             evt.stopPropagation();
@@ -142,7 +142,7 @@ export class ShortcutProvider {
     handle_down(_jm, e) {
         var evt = e || event;
         var selected_node = _jm.get_selected_node();
-        if (!!selected_node) {
+        if (selected_node) {
             var down_node = _jm.find_node_after(selected_node);
             if (!down_node) {
                 var np = _jm.find_node_after(selected_node.parent);
@@ -150,7 +150,7 @@ export class ShortcutProvider {
                     down_node = np.children[0];
                 }
             }
-            if (!!down_node) {
+            if (down_node) {
                 _jm.select_node(down_node);
             }
             evt.stopPropagation();
@@ -167,7 +167,7 @@ export class ShortcutProvider {
         var evt = e || event;
         var selected_node = _jm.get_selected_node();
         var node = null;
-        if (!!selected_node) {
+        if (selected_node) {
             if (selected_node.isroot) {
                 var c = selected_node.children;
                 var children = [];
@@ -186,7 +186,7 @@ export class ShortcutProvider {
             } else {
                 node = selected_node.parent;
             }
-            if (!!node) {
+            if (node) {
                 _jm.select_node(node);
             }
             evt.stopPropagation();

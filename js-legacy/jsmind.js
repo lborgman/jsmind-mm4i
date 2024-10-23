@@ -356,7 +356,7 @@
                     node.index = 0;
                     this._reindex(node.parent);
                 } else {
-                    var node_before = (!!beforeid) ? this.get_node(beforeid) : null;
+                    var node_before = (beforeid) ? this.get_node(beforeid) : null;
                     if (node_before != null && node_before.parent != null && node_before.parent.id == node.parent.id) {
                         node.index = node_before.index - 0.5;
                         this._reindex(node.parent);
@@ -527,7 +527,7 @@
                     d = node_json.direction == 'left' ? jm.direction.left : jm.direction.right;
                 }
                 var node = mind.add_node(node_parent, node_json.id, node_json.topic, data, d, node_json.expanded);
-                if (!!node_json['children']) {
+                if (node_json['children']) {
                     var children = node_json.children;
                     for (var i = 0; i < children.length; i++) {
                         df._extract_subnode(mind, node, children[i]);
@@ -606,7 +606,7 @@
                 // reverse array for improving looping performance
                 narray.reverse();
                 var root_node = df._extract_root(mind, narray);
-                if (!!root_node) {
+                if (root_node) {
                     df._extract_subnode(mind, root_node, narray);
                 } else {
                     logger.error('root node can not be found');
@@ -640,7 +640,7 @@
                         data = df._extract_data(node_json);
                         var d = null;
                         var node_direction = node_json.direction;
-                        if (!!node_direction) {
+                        if (node_direction) {
                             d = node_direction == 'left' ? jm.direction.left : jm.direction.right;
                         }
                         var node = mind.add_node(parent_node, node_json.id, node_json.topic, data, d, node_json.expanded);
@@ -681,7 +681,7 @@
                     topic: node.topic,
                     expanded: node.expanded
                 };
-                if (!!node.parent) {
+                if (node.parent) {
                     o.parentid = node.parent.id;
                 }
                 if (node.isroot) {
@@ -737,7 +737,7 @@
                 };
                 json.format = 'freemind';
                 var xmllines = [];
-                xmllines.push('<map version=\"1.0.1\">');
+                xmllines.push('<map version="1.0.1">');
                 df._buildmap(mind.root, xmllines);
                 xmllines.push('</map>');
                 json.data = xmllines.join(' ');
@@ -760,7 +760,7 @@
             _find_root: function (xml_doc) {
                 var nodes = xml_doc.childNodes;
                 var node = null;
-                var root = null;
+                // var root = null;
                 var n = null;
                 for (var i = 0; i < nodes.length; i++) {
                     n = nodes[i];
@@ -769,7 +769,7 @@
                         break;
                     }
                 }
-                if (!!node) {
+                if (node) {
                     var ns = node.childNodes;
                     node = null;
                     for (var i = 0; i < ns.length; i++) {
@@ -806,12 +806,12 @@
 
                 var node_position = xml_node.getAttribute('POSITION');
                 var node_direction = null;
-                if (!!node_position) {
+                if (node_position) {
                     node_direction = node_position == 'left' ? jm.direction.left : jm.direction.right;
                 }
                 //logger.debug(node_position +':'+ node_direction);
                 var node = null;
-                if (!!parent_node) {
+                if (parent_node) {
                     node = mind.add_node(parent_node, node_id, node_topic, node_data, node_direction, node_expanded);
                 } else {
                     node = mind.set_root(node_id, node_topic, node_data);
@@ -846,20 +846,20 @@
                     pos = node.direction === jm.direction.left ? 'left' : 'right';
                 }
                 xmllines.push('<node');
-                xmllines.push('ID=\"' + node.id + '\"');
-                if (!!pos) {
-                    xmllines.push('POSITION=\"' + pos + '\"');
+                xmllines.push('ID="' + node.id + '"');
+                if (pos) {
+                    xmllines.push('POSITION="' + pos + '"');
                 }
-                xmllines.push('TEXT=\"' + node.topic + '\">');
+                xmllines.push('TEXT="' + node.topic + '">');
 
                 // store expanded status as an attribute
-                xmllines.push('<attribute NAME=\"expanded\" VALUE=\"' + node.expanded + '\"/>');
+                xmllines.push('<attribute NAME="expanded" VALUE="' + node.expanded + '"/>');
 
                 // for attributes
                 var node_data = node.data;
                 if (node_data != null) {
                     for (var k in node_data) {
-                        xmllines.push('<attribute NAME=\"' + k + '\" VALUE=\"' + node_data[k] + '\"/>');
+                        xmllines.push('<attribute NAME="' + k + '" VALUE="' + node_data[k] + '"/>');
                     }
                 }
 
@@ -882,7 +882,7 @@
         },
         ajax: {
             request: function (url, param, method, callback, fail_callback) {
-                var a = jm.util.ajax;
+                // var a = jm.util.ajax;
                 var p = null;
                 var tmp_param = [];
                 for (var k in param) {
@@ -934,7 +934,7 @@
         dom: {
             //target,eventType,handler
             add_event: function (t, e, h) {
-                if (!!t.addEventListener) {
+                if (t.addEventListener) {
                     t.addEventListener(e, h, false);
                 } else {
                     t.attachEvent('on' + e, h);
@@ -1092,7 +1092,7 @@
 
         set_theme: function (theme) {
             var theme_old = this.options.theme;
-            this.options.theme = (!!theme) ? theme : null;
+            this.options.theme = (theme) ? theme : null;
             if (theme_old != this.options.theme) {
                 this.view.reset_theme();
                 this.view.reset_custom_style();
@@ -1111,7 +1111,7 @@
             }
             var element = e.target || event.srcElement;
             var nodeid = this.view.get_binded_nodeid(element);
-            if (!!nodeid) {
+            if (nodeid) {
                 if (this.view.is_node(element)) {
                     this.select_node(nodeid);
                 }
@@ -1128,7 +1128,7 @@
             var is_expander = this.view.is_expander(element);
             if (is_expander) {
                 var nodeid = this.view.get_binded_nodeid(element);
-                if (!!nodeid) {
+                if (nodeid) {
                     this.toggle_node(nodeid);
                 }
             }
@@ -1143,7 +1143,7 @@
                 var is_node = this.view.is_node(element);
                 if (is_node) {
                     var nodeid = this.view.get_binded_nodeid(element);
-                    if (!!nodeid) {
+                    if (nodeid) {
                         this.begin_edit(nodeid);
                     }
                 }
@@ -1320,7 +1320,7 @@
                     dir = this.layout.calculate_next_child_direction(the_parent_node);
                 }
                 var node = this.mind.add_node(the_parent_node, nodeid, topic, data, dir);
-                if (!!node) {
+                if (node) {
                     this.view.add_node(node);
                     this.layout.layout();
                     this.view.show(false);
@@ -1343,7 +1343,7 @@
                     dir = this.layout.calculate_next_child_direction(the_node_before.parent);
                 }
                 var node = this.mind.insert_node_before(the_node_before, nodeid, topic, data, dir);
-                if (!!node) {
+                if (node) {
                     this.view.add_node(node);
                     this.layout.layout();
                     this.view.show(false);
@@ -1364,7 +1364,7 @@
                     dir = this.layout.calculate_next_child_direction(the_node_after.parent);
                 }
                 var node = this.mind.insert_node_after(the_node_after, nodeid, topic, data, dir);
-                if (!!node) {
+                if (node) {
                     this.view.add_node(node);
                     this.layout.layout();
                     this.view.show(false);
@@ -1416,7 +1416,7 @@
                     return;
                 }
                 var node = this.get_node(nodeid);
-                if (!!node) {
+                if (node) {
                     if (node.topic === topic) {
                         logger.info('nothing changed');
                         this.view.update_node(node);
@@ -1438,7 +1438,7 @@
             if (this.get_editable()) {
                 var node = this.get_node(nodeid);
                 var updated_node = this.mind.move_node(node, beforeid, parentid, direction);
-                if (!!updated_node) {
+                if (updated_node) {
                     this.view.update_node(updated_node);
                     this.layout.layout();
                     this.view.show(false);
@@ -1469,7 +1469,7 @@
         },
 
         get_selected_node: function () {
-            if (!!this.mind) {
+            if (this.mind) {
                 return this.mind.selected;
             } else {
                 return null;
@@ -1477,7 +1477,7 @@
         },
 
         select_clear: function () {
-            if (!!this.mind) {
+            if (this.mind) {
                 this.mind.selected = null;
                 this.view.select_clear();
             }
@@ -1555,11 +1555,11 @@
         set_node_color: function (nodeid, bgcolor, fgcolor) {
             if (this.get_editable()) {
                 var node = this.mind.get_node(nodeid);
-                if (!!node) {
-                    if (!!bgcolor) {
+                if (node) {
+                    if (bgcolor) {
                         node.data['background-color'] = bgcolor;
                     }
-                    if (!!fgcolor) {
+                    if (fgcolor) {
                         node.data['foreground-color'] = fgcolor;
                     }
                     this.view.reset_node_custom_style(node);
@@ -1573,14 +1573,14 @@
         set_node_font_style: function (nodeid, size, weight, style) {
             if (this.get_editable()) {
                 var node = this.mind.get_node(nodeid);
-                if (!!node) {
-                    if (!!size) {
+                if (node) {
+                    if (size) {
                         node.data['font-size'] = size;
                     }
-                    if (!!weight) {
+                    if (weight) {
                         node.data['font-weight'] = weight;
                     }
-                    if (!!style) {
+                    if (style) {
                         node.data['font-style'] = style;
                     }
                     this.view.reset_node_custom_style(node);
@@ -1597,17 +1597,17 @@
         set_node_background_image: function (nodeid, image, width, height, rotation) {
             if (this.get_editable()) {
                 var node = this.mind.get_node(nodeid);
-                if (!!node) {
-                    if (!!image) {
+                if (node) {
+                    if (image) {
                         node.data['background-image'] = image;
                     }
-                    if (!!width) {
+                    if (width) {
                         node.data['width'] = width;
                     }
-                    if (!!height) {
+                    if (height) {
                         node.data['height'] = height;
                     }
-                    if (!!rotation) {
+                    if (rotation) {
                         node.data['background-rotation'] = rotation;
                     }
                     this.view.reset_node_custom_style(node);
@@ -1624,7 +1624,7 @@
         set_node_background_rotation: function (nodeid, rotation) {
             if (this.get_editable()) {
                 var node = this.mind.get_node(nodeid);
-                if (!!node) {
+                if (node) {
                     if (!node.data['background-image']) {
                         logger.error('fail, only can change rotation angle of node with background image');
                         return null;
@@ -1691,7 +1691,7 @@
             var df = null;
             var mind = null;
             if (typeof mind_data === 'object') {
-                if (!!mind_data.format) {
+                if (mind_data.format) {
                     df = mind_data.format;
                 } else {
                     df = 'node_tree';
@@ -2133,7 +2133,7 @@
 
         part_layout: function (node) {
             var root = this.jm.mind.root;
-            if (!!root) {
+            if (root) {
                 var root_layout_data = root._data.layout;
                 if (node.isroot) {
                     root_layout_data.outer_height_right = this._layout_offset_subnodes_height(root_layout_data.right_nodes);
@@ -2155,7 +2155,7 @@
         set_visible: function (nodes, visible) {
             var i = nodes.length;
             var node = null;
-            var layout_data = null;
+            // var layout_data = null;
             while (i--) {
                 node = nodes[i];
                 layout_data = node._data.layout;
@@ -2352,7 +2352,7 @@
                 var evt = e || event;
                 if (evt.keyCode == 13) { v.edit_node_end(); evt.stopPropagation(); }
             });
-            jm.util.dom.add_event(this.e_editor, 'blur', function (e) {
+            jm.util.dom.add_event(this.e_editor, 'blur', function () {
                 v.edit_node_end();
             });
 
@@ -2413,7 +2413,7 @@
 
         reset_theme: function () {
             var theme_name = this.jm.options.theme;
-            if (!!theme_name) {
+            if (theme_name) {
                 this.e_nodes.className = 'theme-' + theme_name;
             } else {
                 this.e_nodes.className = '';
@@ -2487,7 +2487,7 @@
                 parent_node.appendChild(d_e);
                 view_data.expander = d_e;
             }
-            if (!!node.topic) {
+            if (node.topic) {
                 if (this.opts.support_html) {
                     $h(d, node.topic);
                 } else {
@@ -2528,7 +2528,7 @@
         update_node: function (node) {
             var view_data = node._data.view;
             var element = view_data.element;
-            if (!!node.topic) {
+            if (node.topic) {
                 if (this.opts.support_html) {
                     $h(element, node.topic);
                 } else {
@@ -2548,12 +2548,12 @@
         },
 
         select_node: function (node) {
-            if (!!this.selected_node) {
+            if (this.selected_node) {
                 this.selected_node._data.view.element.className =
                     this.selected_node._data.view.element.className.replace(/\s*selected\b/i, '');
                 this.reset_node_custom_style(this.selected_node);
             }
-            if (!!node) {
+            if (node) {
                 this.selected_node = node;
                 node._data.view.element.className += ' selected';
                 this.clear_node_custom_style(node);
@@ -2680,7 +2680,7 @@
             logger.debug('view.show');
             this.expand_size();
             this._show();
-            if (!!keep_center) {
+            if (keep_center) {
                 this._center_root();
             }
         },
@@ -2839,7 +2839,7 @@
             var _offset = this.get_view_offset();
             for (var nodeid in nodes) {
                 node = nodes[nodeid];
-                if (!!node.isroot) { continue; }
+                if (node.isroot) { continue; }
                 if (('visible' in node._data.layout) && !node._data.layout.visible) { continue; }
                 pin = this.layout.get_node_point_in(node);
                 pout = this.layout.get_node_point_out(node.parent);
@@ -2957,35 +2957,35 @@
             }
         },
 
-        handle_addchild: function (_jm, e) {
+        handle_addchild: function (_jm) {
             var selected_node = _jm.get_selected_node();
-            if (!!selected_node) {
+            if (selected_node) {
                 var nodeid = this._newid();
                 var node = _jm.add_node(selected_node, nodeid, 'New Node');
-                if (!!node) {
+                if (node) {
                     _jm.select_node(nodeid);
                     _jm.begin_edit(nodeid);
                 }
             }
         },
-        handle_addbrother: function (_jm, e) {
+        handle_addbrother: function (_jm) {
             var selected_node = _jm.get_selected_node();
             if (!!selected_node && !selected_node.isroot) {
                 var nodeid = this._newid();
                 var node = _jm.insert_node_after(selected_node, nodeid, 'New Node');
-                if (!!node) {
+                if (node) {
                     _jm.select_node(nodeid);
                     _jm.begin_edit(nodeid);
                 }
             }
         },
-        handle_editnode: function (_jm, e) {
+        handle_editnode: function (_jm) {
             var selected_node = _jm.get_selected_node();
-            if (!!selected_node) {
+            if (selected_node) {
                 _jm.begin_edit(selected_node);
             }
         },
-        handle_delnode: function (_jm, e) {
+        handle_delnode: function (_jm) {
             var selected_node = _jm.get_selected_node();
             if (!!selected_node && !selected_node.isroot) {
                 _jm.select_node(selected_node.parent);
@@ -2995,7 +2995,7 @@
         handle_toggle: function (_jm, e) {
             var evt = e || event;
             var selected_node = _jm.get_selected_node();
-            if (!!selected_node) {
+            if (selected_node) {
                 _jm.toggle_node(selected_node.id);
                 evt.stopPropagation();
                 evt.preventDefault();
@@ -3004,7 +3004,7 @@
         handle_up: function (_jm, e) {
             var evt = e || event;
             var selected_node = _jm.get_selected_node();
-            if (!!selected_node) {
+            if (selected_node) {
                 var up_node = _jm.find_node_before(selected_node);
                 if (!up_node) {
                     var np = _jm.find_node_before(selected_node.parent);
@@ -3012,7 +3012,7 @@
                         up_node = np.children[np.children.length - 1];
                     }
                 }
-                if (!!up_node) {
+                if (up_node) {
                     _jm.select_node(up_node);
                 }
                 evt.stopPropagation();
@@ -3023,7 +3023,7 @@
         handle_down: function (_jm, e) {
             var evt = e || event;
             var selected_node = _jm.get_selected_node();
-            if (!!selected_node) {
+            if (selected_node) {
                 var down_node = _jm.find_node_after(selected_node);
                 if (!down_node) {
                     var np = _jm.find_node_after(selected_node.parent);
@@ -3031,7 +3031,7 @@
                         down_node = np.children[0];
                     }
                 }
-                if (!!down_node) {
+                if (down_node) {
                     _jm.select_node(down_node);
                 }
                 evt.stopPropagation();
@@ -3049,7 +3049,7 @@
             var evt = e || event;
             var selected_node = _jm.get_selected_node();
             var node = null;
-            if (!!selected_node) {
+            if (selected_node) {
                 if (selected_node.isroot) {
                     var c = selected_node.children;
                     var children = [];
@@ -3069,7 +3069,7 @@
                 } else {
                     node = selected_node.parent;
                 }
-                if (!!node) {
+                if (node) {
                     _jm.select_node(node);
                 }
                 evt.stopPropagation();

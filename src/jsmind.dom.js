@@ -45,7 +45,7 @@ class Dom {
 
         //target,eventType,handler
         this.on = function (t, e, h) {
-            if (!!t.addEventListener) {
+            if (t.addEventListener) {
                 t.addEventListener(e, h, false);
             } else {
                 t.attachEvent('on' + e, h);

@@ -98,7 +98,7 @@ export default class jsMind {
     }
 
     init() {
-        if (!!this.initialized) {
+        if (this.initialized) {
             return;
         }
         this.initialized = true;
@@ -172,7 +172,7 @@ export default class jsMind {
     }
     set_theme(theme) {
         var theme_old = this.options.theme;
-        this.options.theme = !!theme ? theme : null;
+        this.options.theme = theme ? theme : null;
         if (theme_old != this.options.theme) {
             this.view.reset_theme();
             this.view.reset_custom_style();
@@ -191,7 +191,7 @@ export default class jsMind {
         }
         var element = e.target || event.srcElement;
         var node_id = this.view.get_binded_nodeid(element);
-        if (!!node_id) {
+        if (node_id) {
             if (this.view.is_node(element)) {
                 this.select_node(node_id);
             }
@@ -207,7 +207,7 @@ export default class jsMind {
         var is_expander = this.view.is_expander(element);
         if (is_expander) {
             var node_id = this.view.get_binded_nodeid(element);
-            if (!!node_id) {
+            if (node_id) {
                 this.toggle_node(node_id);
             }
         }
@@ -221,7 +221,7 @@ export default class jsMind {
             var is_node = this.view.is_node(element);
             if (is_node) {
                 var node_id = this.view.get_binded_nodeid(element);
-                if (!!node_id) {
+                if (node_id) {
                     this.begin_edit(node_id);
                 }
             }
@@ -413,7 +413,7 @@ export default class jsMind {
                 dir = this.layout.calculate_next_child_direction(the_node_before.parent);
             }
             var node = this.mind.insert_node_before(the_node_before, node_id, topic, data, dir);
-            if (!!node) {
+            if (node) {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
@@ -437,7 +437,7 @@ export default class jsMind {
                 dir = this.layout.calculate_next_child_direction(the_node_after.parent);
             }
             var node = this.mind.insert_node_after(the_node_after, node_id, topic, data, dir);
-            if (!!node) {
+            if (node) {
                 this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
@@ -495,7 +495,7 @@ export default class jsMind {
                 return;
             }
             var node = this.get_node(node_id);
-            if (!!node) {
+            if (node) {
                 if (node.topic === topic) {
                     logger.info('nothing changed');
                     this.view.update_node(node);
@@ -520,7 +520,7 @@ export default class jsMind {
         if (this.get_editable()) {
             var node = this.get_node(node_id);
             var updated_node = this.mind.move_node(node, before_id, parent_id, direction);
-            if (!!updated_node) {
+            if (updated_node) {
                 this.view.update_node(updated_node);
                 this.layout.layout();
                 this.view.show(false);
@@ -553,14 +553,14 @@ export default class jsMind {
         this.invoke_event_handle(EventType.select, { evt: 'select_node', data: [], node: node.id });
     }
     get_selected_node() {
-        if (!!this.mind) {
+        if (this.mind) {
             return this.mind.selected;
         } else {
             return null;
         }
     }
     select_clear() {
-        if (!!this.mind) {
+        if (this.mind) {
             this.mind.selected = null;
             this.view.select_clear();
         }
@@ -650,11 +650,11 @@ export default class jsMind {
     set_node_color(node_id, bg_color, fg_color) {
         if (this.get_editable()) {
             var node = this.mind.get_node(node_id);
-            if (!!node) {
-                if (!!bg_color) {
+            if (node) {
+                if (bg_color) {
                     node.data['background-color'] = bg_color;
                 }
-                if (!!fg_color) {
+                if (fg_color) {
                     node.data['foreground-color'] = fg_color;
                 }
                 this.view.reset_node_custom_style(node);
@@ -667,14 +667,14 @@ export default class jsMind {
     set_node_font_style(node_id, size, weight, style) {
         if (this.get_editable()) {
             var node = this.mind.get_node(node_id);
-            if (!!node) {
-                if (!!size) {
+            if (node) {
+                if (size) {
                     node.data['font-size'] = size;
                 }
-                if (!!weight) {
+                if (weight) {
                     node.data['font-weight'] = weight;
                 }
-                if (!!style) {
+                if (style) {
                     node.data['font-style'] = style;
                 }
                 this.view.reset_node_custom_style(node);
@@ -690,17 +690,17 @@ export default class jsMind {
     set_node_background_image(node_id, image, width, height, rotation) {
         if (this.get_editable()) {
             var node = this.mind.get_node(node_id);
-            if (!!node) {
-                if (!!image) {
+            if (node) {
+                if (image) {
                     node.data['background-image'] = image;
                 }
-                if (!!width) {
+                if (width) {
                     node.data['width'] = width;
                 }
-                if (!!height) {
+                if (height) {
                     node.data['height'] = height;
                 }
-                if (!!rotation) {
+                if (rotation) {
                     node.data['background-rotation'] = rotation;
                 }
                 this.view.reset_node_custom_style(node);
@@ -716,7 +716,7 @@ export default class jsMind {
     set_node_background_rotation(node_id, rotation) {
         if (this.get_editable()) {
             var node = this.mind.get_node(node_id);
-            if (!!node) {
+            if (node) {
                 if (!node.data['background-image']) {
                     logger.error(
                         'fail, only can change rotation angle of node with background image'

@@ -86,7 +86,7 @@ export const format = {
                 d,
                 node_json.expanded
             );
-            if (!!node_json['children']) {
+            if (node_json['children']) {
                 var children = node_json.children;
                 for (var i = 0; i < children.length; i++) {
                     df._extract_subnode(mind, node, children[i]);
@@ -161,7 +161,7 @@ export const format = {
             // reverse array for improving looping performance
             nodes.reverse();
             var root_node = df._extract_root(mind, nodes);
-            if (!!root_node) {
+            if (root_node) {
                 df._extract_subnode(mind, root_node, nodes);
             } else {
                 logger.error('root node can not be found');
@@ -195,7 +195,7 @@ export const format = {
                     data = df._extract_data(node_json);
                     var d = null;
                     var node_direction = node_json.direction;
-                    if (!!node_direction) {
+                    if (node_direction) {
                         d = node_direction == 'left' ? Direction.left : Direction.right;
                     }
                     var node = mind.add_node(
@@ -252,7 +252,7 @@ export const format = {
                 topic: node.topic,
                 expanded: node.expanded,
             };
-            if (!!node.parent) {
+            if (node.parent) {
                 o.parentid = node.parent.id;
             }
             if (node.isroot) {
@@ -328,7 +328,7 @@ export const format = {
         _find_root: function (xml_doc) {
             var nodes = xml_doc.childNodes;
             var node = null;
-            var root = null;
+            // var root = null;
             var n = null;
             for (var i = 0; i < nodes.length; i++) {
                 n = nodes[i];
@@ -337,7 +337,7 @@ export const format = {
                     break;
                 }
             }
-            if (!!node) {
+            if (node) {
                 var ns = node.childNodes;
                 node = null;
                 for (var i = 0; i < ns.length; i++) {
@@ -375,11 +375,11 @@ export const format = {
 
             var node_position = xml_node.getAttribute('POSITION');
             var node_direction = null;
-            if (!!node_position) {
+            if (node_position) {
                 node_direction = node_position == 'left' ? Direction.left : Direction.right;
             }
             var node = null;
-            if (!!parent_node) {
+            if (parent_node) {
                 node = mind.add_node(
                     parent_node,
                     node_id,
@@ -422,7 +422,7 @@ export const format = {
             }
             xml_lines.push('<node');
             xml_lines.push(' ID="' + node.id + '"');
-            if (!!pos) {
+            if (pos) {
                 xml_lines.push(' POSITION="' + pos + '"');
             }
             if (!node.expanded) {
@@ -529,10 +529,11 @@ export const format = {
         },
 
         _build_lines: function (lines, nodes, level) {
-            let prefix = new Array(level + 1).join(' ');
+            // let prefix = new Array(level + 1).join(' ');
+            let prefix = Array.from({ length: level + 1 }).join(' ');
             for (let node of nodes) {
                 lines.push(prefix + node.topic);
-                if (!!node.children) {
+                if (node.children) {
                     format.text._build_lines(lines, node.children, level + 1);
                 }
             }

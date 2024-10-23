@@ -24,7 +24,7 @@ export class DataProvider {
         var df = null;
         var mind = null;
         if (typeof mind_data === 'object') {
-            if (!!mind_data.format) {
+            if (mind_data.format) {
                 df = mind_data.format;
             } else {
                 df = 'node_tree';

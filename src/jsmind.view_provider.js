@@ -29,7 +29,7 @@ export class ViewProvider {
         this.editing_node = null;
 
         this.graph = null;
-        this.render_node = !!options.custom_node_render
+        this.render_node = options.custom_node_render
             ? this._custom_node_render
             : this._default_node_render;
         this.zoom_current = 1;
@@ -68,7 +68,7 @@ export class ViewProvider {
                 evt.stopPropagation();
             }
         });
-        $.on(this.e_editor, 'blur', function (e) {
+        $.on(this.e_editor, 'blur', function () {
             v.edit_node_end();
         });
 
@@ -85,7 +85,7 @@ export class ViewProvider {
     }
 
     add_event(obj, event_name, event_handle, capture_by_panel) {
-        let target = !!capture_by_panel ? this.e_panel : this.e_nodes;
+        let target = capture_by_panel ? this.e_panel : this.e_nodes;
         $.on(target, event_name, function (e) {
             var evt = e || event;
             event_handle.call(obj, evt);
@@ -129,7 +129,7 @@ export class ViewProvider {
     }
     reset_theme() {
         var theme_name = this.jm.options.theme;
-        if (!!theme_name) {
+        if (theme_name) {
             this.e_nodes.className = 'theme-' + theme_name;
         } else {
             this.e_nodes.className = '';
@@ -231,12 +231,17 @@ export class ViewProvider {
         }
         return;
 
+        /**
+         * 
+         * @param {HTMLElement} eltCopilot 
+         * @returns 
+         */
         function makePromCopilot(eltCopilot) {
             if (eltCopilot.tagName != "JMNODE") throw Error("eltCopilot not jmnode");
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 function callback(eltCopilotCallback) {
                     if (eltCopilotCallback.tagName != "JMNODE") throw Error("eltCopilotcallback not jmnode");
-                    const delay = window.delayResolve;
+                    const delay = 0; // window.delayResolve;
                     setTimeout(() => {
                         const bcr = eltCopilotCallback.getBoundingClientRect();
                         const txt = eltCopilotCallback.textContent;
@@ -288,6 +293,7 @@ export class ViewProvider {
                 });
             }
 
+            /*
             function getElementSizeAfterRenderCopilot1(element, callback) {
                 // const element = document.querySelector(selector);
 
@@ -312,8 +318,10 @@ export class ViewProvider {
                 // Initial check in case the element is already rendered
                 // requestAnimationFrame(checkSize);
             }
+            */
         }
 
+        /*
         return makePromReqFAR();
         function makePromReqFAR() {
             return new Promise((resolve, reject) => {
@@ -375,7 +383,10 @@ export class ViewProvider {
                 getWH();
             });
         }
+        */
 
+
+        /*
         return new Promise((resolve, reject) => {
             const getWH = () => {
                 const W = eltJmnode.clientWidth;
@@ -411,6 +422,7 @@ export class ViewProvider {
             }
             getWH();
         });
+        */
     }
 
 
@@ -464,7 +476,7 @@ export class ViewProvider {
         return prom;
     }
     run_in_c11y_mode_if_needed(func) {
-        if (!!this.container.offsetParent) {
+        if (this.container.offsetParent) {
             func();
             return;
         }
@@ -501,7 +513,7 @@ export class ViewProvider {
             parent_node.appendChild(d_e);
             view_data.expander = d_e;
         }
-        if (!!node.topic) {
+        if (node.topic) {
             this.render_node(d, node);
         }
         d.setAttribute('nodeid', node.id);
@@ -591,6 +603,7 @@ export class ViewProvider {
     }
 
 
+    /*
     ORIGupdate_node(node) {
         var view_data = node._data.view;
         var element = view_data.element;
@@ -608,6 +621,7 @@ export class ViewProvider {
             element.style = origin_style;
         }
     }
+    */
     update_node(node) {
         var view_data = node._data.view;
         var element = view_data.element;
@@ -651,12 +665,12 @@ export class ViewProvider {
 
 
     select_node(node) {
-        if (!!this.selected_node) {
+        if (this.selected_node) {
             var element = this.selected_node._data.view.element;
             element.className = element.className.replace(/\s*selected\b/i, '');
             this.restore_selected_node_custom_style(this.selected_node);
         }
-        if (!!node) {
+        if (node) {
             this.selected_node = node;
             node._data.view.element.className += ' selected';
             this.clear_selected_node_custom_style(node);
@@ -720,6 +734,7 @@ export class ViewProvider {
         return { x: _x, y: _y };
     }
     resize() {
+        if (!this.graph) throw Error(`this.graph is ${this.graph}`);
         this.graph.set_size(1, 1);
         this.e_nodes.style.width = '1px';
         this.e_nodes.style.height = '1px';
@@ -728,6 +743,7 @@ export class ViewProvider {
         this._show();
     }
     _show() {
+        if (!this.graph) throw Error(`this.graph is ${this.graph}`);
         this.graph.set_size(this.size.w, this.size.h);
         this.e_nodes.style.width = this.size.w + 'px';
         this.e_nodes.style.height = this.size.h + 'px';
@@ -755,7 +771,7 @@ export class ViewProvider {
         ) {
             return false;
         }
-        let zoom_center = !!e
+        let zoom_center = e
             ? { x: e.x - e_panel_rect.x, y: e.y - e_panel_rect.y }
             : { x: e_panel_rect.width / 2, y: e_panel_rect.height / 2 };
         let panel_scroll_x =
@@ -776,7 +792,7 @@ export class ViewProvider {
         logger.debug(`view.show: {keep_center: ${keep_center}}`);
         this.expand_size();
         this._show();
-        if (!!keep_center) {
+        if (keep_center) {
             this.center_node(this.jm.mind.root);
         }
     }
@@ -860,7 +876,7 @@ export class ViewProvider {
     }
 
     _get_expander_text(node) {
-        let style = !!this.opts.expander_style ? this.opts.expander_style.toLowerCase() : 'char';
+        let style = this.opts.expander_style ? this.opts.expander_style.toLowerCase() : 'char';
         if (style === 'number') {
             return node.children.length > 99 ? '...' : node.children.length;
         }
@@ -958,6 +974,7 @@ export class ViewProvider {
         node_element.style.color = '';
     }
     clear_lines() {
+        if (!this.graph) throw Error(`this.graph is ${this.graph}`);
         this.graph.clear();
     }
     show_lines() {
@@ -970,7 +987,7 @@ export class ViewProvider {
         var _offset = this.get_view_offset();
         for (var nodeid in nodes) {
             node = nodes[nodeid];
-            if (!!node.isroot) {
+            if (node.isroot) {
                 continue;
             }
             if (!this.layout.is_visible(node)) {
@@ -979,6 +996,7 @@ export class ViewProvider {
             pin = this.layout.get_node_point_in(node);
             pout = this.layout.get_node_point_out(node.parent);
             color = node.data['leading-line-color'];
+            if (!this.graph) throw Error(`this.graph is ${this.graph}`);
             this.graph.draw_line(pout, pin, _offset, color);
         }
     }
