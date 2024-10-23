@@ -181,28 +181,201 @@ export class ViewProvider {
      * 
      * @param {Object} node 
      */
+    /*
     ORIGinit_nodes_size(node) {
         var view_data = node._data.view;
         view_data.width = view_data.element.clientWidth;
         view_data.height = view_data.element.clientHeight;
     }
+    */
     /**
      * 
      * @param {Object} node 
      * @returns {Promise}
      */
-    init_nodes_size(node) {
+    async init_nodes_size(node) {
         const view_data = node._data.view;
         const eltJmnode = view_data.element;
-        const eltText = eltJmnode.querySelector(".jmnode-text");
         if (!eltJmnode) throw Error("eltJmnode is null");
-        let tempW;
-        let tempH;
-        let tempWtext;
-        let tempHtext;
-        let nEq;
-        const startTime = Date.now();
-        const msMaxWait = 1000;
+        if (!eltJmnode.isConnected) throw Error(`eltJmnode.isConnected is ${eltJmnode.isConnected}`);
+        function checkBcr(bcrResolved, elt) {
+            if (elt.tagName != "JMNODE") throw Error("Not jmnode");
+            const txt2 = elt.textContent;
+            console.log("Start CHECK", txt2);
+            function checkAfter(ms) {
+                setTimeout(() => {
+                    const bcrjAtCheck = elt.getBoundingClientRect();
+                    const ok = bcrResolved.width == bcrjAtCheck.width && bcrResolved.height == bcrjAtCheck.height;
+                    const css = ok ? "background:green;" : "background:red;";
+                    console.log(`%cCHECK!!! ${ms}ms ${ok}, ${txt2}`, css, txt2, { bcrjAtCheck, bcrResolved });
+                }, ms);
+            }
+            let ms = 10;
+            while (ms < 20) {
+                console.log(`Start CHECK ${ms}ms, ${txt2}`);
+                checkAfter(ms);
+                ms *= 4;
+            }
+        }
+
+        eltJmnode.style.transition = "none";
+        const resolvedBcr = await makePromCopilot(eltJmnode);
+        eltJmnode.style.transition = null;
+
+        view_data.width = resolvedBcr.width;
+        view_data.height = resolvedBcr.height;
+        if (node.topic) {
+            const bcrAfter = eltJmnode.getBoundingClientRect();
+            console.log(node.topic, { bcrAfter });
+            checkBcr(resolvedBcr, eltJmnode);
+        }
+        return;
+
+        function makePromCopilot(eltCopilot) {
+            if (eltCopilot.tagName != "JMNODE") throw Error("eltCopilot not jmnode");
+            return new Promise((resolve, reject) => {
+                function callback(eltCopilotCallback) {
+                    if (eltCopilotCallback.tagName != "JMNODE") throw Error("eltCopilotcallback not jmnode");
+                    const delay = window.delayResolve;
+                    setTimeout(() => {
+                        const bcr = eltCopilotCallback.getBoundingClientRect();
+                        const txt = eltCopilotCallback.textContent;
+                        const w = bcr.width;
+                        const h = bcr.height;
+                        console.log(`RESOLVE Copilot, ${delay}, ${txt}`, { w, h });
+                        resolve(bcr);
+                    }, delay);
+                }
+                getElementSizeAfterRenderCopilot2(eltCopilot, callback);
+            });
+            function getElementSizeAfterRenderCopilot2(element, callback) {
+                // const element = document.querySelector(selector);
+
+                if (!element) {
+                    console.error('Element not found');
+                    return;
+                }
+
+                let resizeObserver;
+                const mutationObserver = new MutationObserver(() => {
+                    if (resizeObserver) {
+                        resizeObserver.disconnect();
+                    }
+
+                    resizeObserver = new ResizeObserver(entries => {
+                        for (let entry of entries) {
+                            const rect = entry.contentRect;
+                            if (rect.width && rect.height) {
+                                callback(eltCopilot);
+                                resizeObserver.disconnect(); // Stop observing once we get the final size
+                                mutationObserver.disconnect(); // Stop observing mutations
+                            }
+                        }
+                    });
+
+                    resizeObserver.observe(element);
+                });
+
+                mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+                // Initial check in case the element is already rendered
+                requestAnimationFrame(() => {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.width && rect.height) {
+                        callback(element);
+                        mutationObserver.disconnect();
+                    }
+                });
+            }
+
+            function getElementSizeAfterRenderCopilot1(element, callback) {
+                // const element = document.querySelector(selector);
+
+                function checkSize() {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.width && rect.height) {
+                        callback(rect);
+                    } else {
+                        requestAnimationFrame(checkSize);
+                    }
+                }
+
+                const observer = new MutationObserver((mutations, obs) => {
+                    requestAnimationFrame(() => {
+                        checkSize();
+                        obs.disconnect();
+                    });
+                });
+
+                observer.observe(document.body, { childList: true, subtree: true });
+
+                // Initial check in case the element is already rendered
+                // requestAnimationFrame(checkSize);
+            }
+        }
+
+        return makePromReqFAR();
+        function makePromReqFAR() {
+            return new Promise((resolve, reject) => {
+                const getWH = () => {
+                    nEq++;
+                    nEqMax = Math.max(nEq, nEqMax);
+                    if (0 !== nEq % 300) { requestAnimationFrame(getWH); return; }
+                    bcr = eltJmnode.getBoundingClientRect();
+                    // W = eltJmnode.clientWidth;
+                    // H = eltJmnode.clientHeight;
+                    W = bcr.width;
+                    H = bcr.height;
+                    const bcrText = eltText.getBoundingClientRect();
+                    // Wtext = eltText.clientWidth;
+                    // Htext = eltText.clientHeight;
+                    Wtext = bcrText.width;
+                    Htext = bcrText.height;
+                    if (W == tempW && H == tempH
+                        &&
+                        Wtext == tempWtext && Htext == tempHtext
+                    ) {
+                        // if (0 === nEq % 300) {
+                        if (txt.length > 15) {
+                            console.log(txt, bcr, { W, H, Wtext, Htext });
+                        }
+                        // }
+                        if (nEq > 200) {
+                            view_data.width = W;
+                            view_data.height = H;
+                            bcr = eltJmnode.getBoundingClientRect();
+                            checkBcr(bcr, eltJmnode);
+                            console.log(`RESOLVE init_nodes_size ${nEq}/${nEqMax}`, eltJmnode, bcr, { W, tempW }, { H, tempH }, view_data);
+                            resolve(true);
+                            return;
+                        }
+                    } else {
+                        tempW = W;
+                        tempH = H;
+                        tempWtext = Wtext;
+                        tempHtext = Htext;
+                        nEq = 0;
+                    }
+
+                    const msWaited = Date.now() - startTime;
+                    if (msWaited > msMaxWait) {
+                        console.error(`fc4i temp init_nodes_size: Too long time, ${msWaited}>${msMaxWait}, ${nEq}/${nEqMax}`,
+                            bcr,
+                            { W, tempW }, { H, tempH }, { Wtext, tempWtext }, { Htext, tempHtext });
+                        if (window.useRejection) {
+                            reject(`REJECTION: fc4i temp init_nodes_size: Too long time, ${msWaited}>${msMaxWait}, ${nEq}/${nEqMax}`);
+                        } else {
+                            throw Error(`Error: fc4i temp init_nodes_size: Too long time, ${msWaited}>${msMaxWait}, ${nEq}/${nEqMax}`);
+                        }
+
+                        return;
+                    }
+                    requestAnimationFrame(getWH);
+                };
+                getWH();
+            });
+        }
+
         return new Promise((resolve, reject) => {
             const getWH = () => {
                 const W = eltJmnode.clientWidth;
@@ -242,6 +415,7 @@ export class ViewProvider {
 
 
     /* See init_node_size */
+    /*
     ORIGinit_nodes() {
         var nodes = this.jm.mind.nodes;
         var doc_frag = $.d.createDocumentFragment();
@@ -256,7 +430,9 @@ export class ViewProvider {
             }
         });
     }
+    */
     init_nodes() {
+        console.log(">>>>>> init_nodes");
         const nodes = this.jm.mind.nodes;
         const doc_frag = $.d.createDocumentFragment();
         for (const nodeid in nodes) {
@@ -278,10 +454,14 @@ export class ViewProvider {
 
 
     add_node(node) {
+        console.trace(">>>>>> add_node");
         this.create_node_element(node, this.e_nodes);
+        let prom;
         this.run_in_c11y_mode_if_needed(() => {
-            this.init_nodes_size(node);
+            // this.init_nodes_size(node);
+            prom = this.init_nodes_size(node);
         });
+        return prom;
     }
     run_in_c11y_mode_if_needed(func) {
         if (!!this.container.offsetParent) {

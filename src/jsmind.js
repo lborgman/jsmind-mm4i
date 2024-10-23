@@ -6,6 +6,12 @@
  *   https://github.com/hizzgdev/jsmind/
  */
 
+if (document.readyState == "loading") {
+    throw Error("document not completely loaded");
+    // const modTools = await importFc4i("toolsJs");
+    // await modTools.promiseDOMready();
+}
+
 import { __version__, logger, EventType, Direction, LogLevel } from './jsmind.common.js';
 import { merge_option } from './jsmind.option.js';
 import { Mind } from './jsmind.mind.js';
@@ -34,6 +40,56 @@ export default class jsMind {
         jsMind.current = this;
         this.options = merge_option(options);
         logger.level(LogLevel[this.options.log_level]);
+
+        // Check options names, see file 2.options.md
+        const topLevelOptions = [
+            "container",
+            "editable",
+            "theme",
+            "mode",
+            "support_html",
+            "view",
+            "layout",
+            "shortcut",
+            "log_level", // not mentioned!
+            "default_event_handle", // not mentioned!
+            "plugin", // not mentioned!
+        ];
+        const ourOptions = this.options;
+        Object.keys(ourOptions).forEach(opt => {
+            if (topLevelOptions.indexOf(opt) == -1) throw Error(`Unknown jsmind option: "${opt}`);
+        });
+        const viewOptions = options.view;
+        if (viewOptions) {
+            const viewLevelOptions = [
+                "engine",
+                "hmargin",
+                "vmargin",
+                "line_width",
+                "line_color",
+                "line_style",
+                "custom_line_render",
+                "draggable",
+                "hide_scrollbars_when_draggable",
+                "node_overflow",
+            ];
+            Object.keys(viewOptions).forEach(opt => {
+                if (viewLevelOptions.indexOf(opt) == -1) throw Error(`Unknown jsmind option: "${opt}`);
+            });
+        }
+        const layoutOptions = options.layout;
+        if (layoutOptions) {
+            const layoutLevelOptions = [
+                "hspace",
+                "vspace",
+                "pspace",
+                "cousin_space",
+            ];
+            Object.keys(layoutOptions).forEach(opt => {
+                if (layoutLevelOptions.indexOf(opt) == -1) throw Error(`Unknown jsmind option: "${opt}`);
+            });
+        }
+
         this.version = __version__;
         this.initialized = false;
         this.mind = null;
@@ -123,6 +179,7 @@ export default class jsMind {
         }
     }
     _event_bind() {
+        return; // FIX-ME:
         this.view.add_event(this, 'mousedown', this.mousedown_handle);
         this.view.add_event(this, 'click', this.click_handle);
         this.view.add_event(this, 'dblclick', this.dblclick_handle);
@@ -322,7 +379,7 @@ export default class jsMind {
         }
         return this.mind.get_node(node);
     }
-    add_node(parent_node, node_id, topic, data, direction) {
+    async add_node(parent_node, node_id, topic, data, direction) {
         if (this.get_editable()) {
             var the_parent_node = this.get_node(parent_node);
             var dir = Direction.of(direction);
@@ -330,8 +387,8 @@ export default class jsMind {
                 dir = this.layout.calculate_next_child_direction(the_parent_node);
             }
             var node = this.mind.add_node(the_parent_node, node_id, topic, data, dir);
-            if (!!node) {
-                this.view.add_node(node);
+            if (node) {
+                await this.view.add_node(node);
                 this.layout.layout();
                 this.view.show(false);
                 this.view.reset_node_custom_style(node);
