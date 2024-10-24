@@ -429,7 +429,7 @@ export class LayoutProvider {
         // var layout_data = null;
         while (i--) {
             node = nodes[i];
-            layout_data = node._data.layout;
+            // layout_data = node._data.layout;
             if (node.expanded) {
                 this.set_visible(node.children, visible);
             } else {
